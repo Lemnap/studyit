@@ -2,7 +2,7 @@
  *
  * Created by cpp on 2017/10/12.
  */
-define(["jquery","cookie"],function ($) {
+define(["jquery","cookie","form"],function ($) {
     $(function () {
         //给表单注册提交事件
         $("form").submit(function () {
@@ -18,10 +18,24 @@ define(["jquery","cookie"],function ($) {
                 return false;
             }
             //获取输入框内容 表单序列化
-            var data=$(this).serialize();
-            console.log(data);
-            //发送ajax请求
-            $.ajax({
+           /* var data=$(this).serialize();
+            console.log(data);*/
+            //1.发送ajax请求
+            //2,利用ajaxForm插件自动获取表单内容，并提交给后端
+            $(this).ajaxSubmit({
+                url:"/api/login",
+                type:"post",
+                success:function (data) {
+                    console.log(data);
+                    if(data.code==200){
+//                  //将后台返回的数据用户名和头像存储到cookie中，cookie只能存储字符串。需要将
+//                        返回的对象转换成字符串
+                        $.cookie("userinfo",JSON.stringify(data.result),{path:"/",expires:365});
+                        location.href="/";
+                    }
+                }
+            })
+           /* $.ajax({
                 url:"/api/login",
                 type:"post",
                 data:data,
@@ -34,9 +48,9 @@ define(["jquery","cookie"],function ($) {
                         location.href="/";
                     }
                 }
-            })
+            })*/
             return false;
-        })
+        });
 
 
     })
