@@ -13,19 +13,31 @@ define(["jquery","template","cookie"],function ($, template) {
             var html=template("profile_tpl",userinfo);
             $("#user-info").html(html);
 
-            //给退出按钮注册点击事件，发送ajax请求
-            $("#btn_logout").click(function () {
-                $.ajax({
-                    url:"/api/logout",
-                    type:"post",
-                    success:function (data) {
-                        console.log(data);
-                        if(data.code==200){
-                            location.href="/dashboard/login";
-                        }
+
+        }
+        //给退出按钮注册点击事件，发送ajax请求
+        $("#btn_logout").click(function () {
+            $.ajax({
+                url:"/api/logout",
+                type:"post",
+                success:function (data) {
+                    console.log(data);
+                    if(data.code==200){
+                        location.href="/dashboard/login";
                     }
-                })
+                }
             })
+        })
+        //给有子元素的li注册点击事件，让子元素显示
+        $(".navs>ul>li>ul").parent().click(function () {
+            $(this).children("ul").slideToggle();
+        });
+        //让当前的a标签加上active
+        var clickA=$(".navs a[href='"+location.pathname+"']");
+        clickA.addClass("active");
+        //让当前点击的元素判断是否有子元素，如果有子元素，让子元素显示
+        if(clickA.parent().parent().siblings("a").length>0){
+            clickA.parent().parent().show();
         }
        /* NProgress.start();
 
